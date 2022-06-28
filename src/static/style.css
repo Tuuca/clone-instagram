@@ -1,0 +1,56 @@
+@font-face {
+    font-family: Heebo-VariableFont_wght;
+    src: url(../static/fonts/Heebo-VariableFont_wght.ttf);
+ }
+
+body{
+    margin: 0;
+    background-color: #f1f1f1;
+    font-family: Heebo-VariableFont_wght;
+}
+
+.bloco{
+    width: 400px;
+    height: 40%;
+    background-color: #fff;
+    text-align: center;
+    border: 1px solid #dbdbdb;
+    margin: 20px auto;
+}
+
+.bloco:first-child{
+    margin: 200px auto auto auto;
+}
+
+.bloco input {
+    background-color: #f1f1f1;
+    width: 70%;
+    padding: 10px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #dbdbdb;
+}
+
+.bloco input[type=submit] {
+    background-color: #0095F6;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.bloco a{
+    color:#0095F6;
+}
+
+.msg{
+    color: #f00;
+}
+
+@media(max-width:500px){
+    .bloco{
+        width: 100%;
+        height: 100%;
+    }
+}
