@@ -48,6 +48,48 @@ body{
     color: #f00;
 }
 
+.navbar{
+    display: flex;
+    justify-content:space-around;
+    align-items: center;
+    height: 60px;
+    background-color: #fff;
+    border: 1px solid #dbdbdb;
+}
+
+.navbar input{
+    background-image: url(../static/search.svg);
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    background-color: #f1f1f1;
+    width: 300px;
+    padding: 10px 20px 10px 40px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #dbdbdb;
+}
+
+.junto{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+}
+
+.junto a{
+    padding: 0px 0px 0px 24px;
+}
+
+main{
+    margin-top: 60px;
+}
+
+.home{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    
+}
+
 @media(max-width:500px){
     .bloco{
         width: 100%;
