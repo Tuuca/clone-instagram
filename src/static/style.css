@@ -33,7 +33,7 @@ body{
 
 .publicacao{
     width: 470px;
-    height: 800px;
+    height: 650px;
     background-color: #fff;
     border: 1px solid #dbdbdb;
     margin: 20px 20px auto auto;
@@ -56,6 +56,12 @@ body{
     border-radius: 50%;
     height: 40px;
     width: 40px;
+}
+
+.fotoperfilnav{
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
 }
 
 h4{
@@ -105,8 +111,8 @@ h4{
     justify-content: flex-start;
 }
 
-.junto a{
-    padding: 0px 0px 0px 24px;
+.junto svg{
+    padding: 5px 24px 0px 0px;
 }
 
 main{
@@ -117,6 +123,11 @@ main{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     
+}
+
+.dropdown{
+    float: left;
+    overflow: hidden;
 }
 
 @media(max-width:500px){
