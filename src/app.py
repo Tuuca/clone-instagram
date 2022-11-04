@@ -36,6 +36,22 @@ cur.execute("CREATE TABLE IF NOT EXISTS COMENTARIO (idcomentario INT PRIMARY KEY
 
 cur.execute("CREATE TABLE IF NOT EXISTS CURTIDA (idcurtida INT PRIMARY KEY AUTO_INCREMENT NOT NULL, idpost INT NOT NULL, idusuario INT NOT NULL, FOREIGN KEY (idpost) REFERENCES POST(idpost), FOREIGN KEY (idusuario) REFERENCES USUARIO(idusuario));")
 
+mydb.commit()
+
+# BASE DE DADOS PARA TESTE
+
+cur.execute("SELECT * FROM USUARIO")
+
+if cur.fetchone() == None:
+
+    cur.execute("INSERT INTO USUARIO (email, nome, senha, foto) VALUES ('capirava@gmail.com ', 'Capiravildo', '123', 'perfil1.jpg');")
+    cur.execute("INSERT INTO USUARIO (email, nome, senha, foto) VALUES ('gato@gmail.com ', 'Gatodinho', '123', 'perfil2.jpg');")
+
+    cur.execute("INSERT INTO POST (idusuario, foto, descricao) VALUES (1, 'post1.jpg', 'OIA EU DE BATMAN');")
+    cur.execute("INSERT INTO POST (idusuario, foto, descricao) VALUES (2, 'post2.jpg', 'é o pulas');")
+
+    mydb.commit()
+
 mydb = mysql.connector.connect(
     host="localhost",
     user=usuario,
@@ -54,6 +70,8 @@ def index():
 
 @app.route('/login', methods=['POST','GET'])
 def login():
+    if 'email' in session:
+        return redirect('home')
     msg = ''
     if request.method == 'POST':
         email = request.form['email']
@@ -80,12 +98,16 @@ def login():
 def logout():
     session.pop('loggedin', None)
     session.pop('idusuario', None)
+    session.pop('email', None)
     session.pop('nome', None)
     session.pop('senha', None)
+    session.pop('foto', None)
     return redirect(url_for('login'))
 
 @app.route('/cadastro', methods=['POST', 'GET'])
 def cadastro():
+    if 'email' in session:
+        return redirect('home')
     msg = ''
     if request.method == 'POST':
         email = request.form['email']
@@ -110,8 +132,12 @@ def cadastro():
 
 @app.route("/home", methods=['POST', 'GET'])
 def home():
+    if not session.get('loggedin'):
+        return redirect(url_for('login'))  
     nome = session['nome']
-    return render_template('home.html', nome=nome)
+    cur.execute(f"SELECT p.idpost ,p.foto, p.descricao , u.nome, u.foto FROM post p INNER JOIN usuario u ON p.idusuario = u.idusuario ORDER BY p.idpost DESC")
+    posts = cur.fetchall()
+    return render_template('home.html', nome=nome, posts=posts, foto=session['foto'], idusuario=session['idusuario'])
     
 if __name__ == '__main__':
     app.run(debug=True)
