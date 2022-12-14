@@ -1,4 +1,6 @@
 from flask import Flask, render_template, session, redirect, request, url_for
+from werkzeug.utils import secure_filename
+import os
 import mysql.connector
 
 app = Flask(__name__)
@@ -20,7 +22,7 @@ try:
     password=senha
     )
 except:
-    print("Erro ao conectar ao banco de dados, verifique as credenciais")
+    print("Erro ao conectar ao banco de dados, verifique as credenciais ou se o banco de dados está rodando.")
     exit()
 
 cur = mydb.cursor()
@@ -135,9 +137,39 @@ def home():
     if not session.get('loggedin'):
         return redirect(url_for('login'))  
     nome = session['nome']
-    cur.execute(f"SELECT p.idpost ,p.foto, p.descricao , u.nome, u.foto FROM post p INNER JOIN usuario u ON p.idusuario = u.idusuario ORDER BY p.idpost DESC")
+    cur.execute(f"SELECT p.idpost, p.foto, p.descricao , u.nome, u.foto, u.idusuario FROM post p INNER JOIN usuario u ON p.idusuario = u.idusuario ORDER BY p.idpost DESC")
     posts = cur.fetchall()
+    print(posts)
+    mydb.commit()
     return render_template('home.html', nome=nome, posts=posts, foto=session['foto'], idusuario=session['idusuario'])
+
+@app.route("/publicar", methods=['POST', 'GET'])
+def publicar():
+    msg = ''
+    if not session.get('loggedin'):
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        descricao = request.form['descricao']
+        print(request.files['foto'])
+        if 'foto' not in request.files:
+            msg = 'Selecione uma foto'
+        else:
+            foto = request.files['foto']
+            if foto.filename == '':
+                msg = 'Selecione uma foto'
+            elif not allowed_file(foto.filename):
+                msg = 'Formato de arquivo não permitido'
+            elif foto:
+                cur.execute(f"INSERT INTO post (idusuario, foto, descricao) VALUES ({session['idusuario']}, '', '{descricao}')")
+                mydb.commit()
+                cur.execute("SELECT MAX(idpost) FROM post")
+                idImagem = cur.fetchone()[0]
+                filename = secure_filename(f"post{idImagem}.{foto.filename.rsplit('.', 1)[1].lower()}")
+                foto.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                cur.execute(f"UPDATE post SET foto = '{filename}' WHERE idpost = {idImagem}")
+                mydb.commit()
+                return redirect(url_for('home'))
+    return render_template('publicar.html', foto=session['foto'], msg=msg)
     
 if __name__ == '__main__':
     app.run(debug=True)

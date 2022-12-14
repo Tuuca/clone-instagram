@@ -1,0 +1,23 @@
+{% extends "home.html" %}
+{% block titulo %}Publicar{% endblock %}
+{% block conteudo %}
+<main>
+    <div class="feed">
+        <div>
+            <div class="bloco">
+                <form method="POST" class="publicar" enctype="multipart/form-data">
+
+                    <input type="file" name="foto" id="foto" class="foto" autocomplete="off">
+
+                    <input type="text" name="descricao" id="descricao" placeholder="Descrição" class="descricao">
+
+                    <input type="submit" value="Publicar" class="botao">
+
+                    <p class="msg">{{msg}}</p>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
