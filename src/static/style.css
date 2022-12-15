@@ -1,15 +1,19 @@
 @font-face {
     font-family: Heebo-VariableFont_wght;
     src: url(../static/fonts/Heebo-VariableFont_wght.ttf);
- }
+}
 
-body{
+main {
+    margin-left: 330px;
+}
+
+body {
     margin: 0;
     background-color: #f1f1f1;
     font-family: Heebo-VariableFont_wght;
 }
 
-.bloco{
+.bloco {
     width: 400px;
     height: 1%;
     background-color: #fff;
@@ -18,7 +22,7 @@ body{
     margin: 20px auto;
 }
 
-.bloco:first-child{
+.bloco:first-child {
     margin: 200px auto auto auto;
 }
 
@@ -31,7 +35,7 @@ body{
     border: 1px solid #dbdbdb;
 }
 
-.publicacao{
+.publicacao {
     width: 470px;
     height: 700px;
     background-color: #fff;
@@ -39,37 +43,42 @@ body{
     margin-top: 20px;
 }
 
-.publicacao .junto{
+.publicacao .junto {
     padding: 0px 0 0 15px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
 }
 
-.publicacao p{
+.junto a {
+    text-decoration: none;
+    color: #000;
+}
+
+.publicacao p {
     margin: 0 0 0 15px;
 }
 
-.junto svg{
+.junto svg {
     margin-right: 15px;
 }
 
-.junto h4{
+.junto h4 {
     margin-left: 5px;
 }
 
-.fotopubli{
+.fotopubli {
     width: 470px;
     height: 470px;
 }
 
-.fotoperfil{
+.fotoperfil {
     border-radius: 50%;
     height: 40px;
     width: 40px;
 }
 
-.fotoperfilnav{
+.fotoperfilnav {
     border-radius: 50%;
     height: 30px;
     width: 30px;
@@ -85,15 +94,15 @@ body{
     border-radius: 5px;
 }
 
-.bloco a{
-    color:#0095F6;
+.bloco a {
+    color: #0095F6;
 }
 
-.msg{
+.msg {
     color: #f00;
 }
 
-.sidebar{
+.sidebar {
     margin: 0;
     padding: 0;
     width: 330px;
@@ -104,7 +113,7 @@ body{
     border: 1px solid #dbdbdb;
 }
 
-.sidebar a{
+.sidebar a {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -113,20 +122,20 @@ body{
     text-decoration: none;
 }
 
-.sidebar a:first-child{
+.sidebar a:first-child {
     padding: 20px 0px 15px 20px;
 }
 
-.sidebar a:hover{
+.sidebar a:hover {
     background-color: #f1f1f1;
     border-radius: 50px;
 }
 
-.sidebar h3{
+.sidebar h3 {
     padding: 0px 0px 0px 15px;
 }
 
-.sidebar input{
+.sidebar input {
     background-image: url(../static/icon/search.svg);
     background-position: 10px 10px;
     background-repeat: no-repeat;
@@ -138,19 +147,40 @@ body{
     border: 1px solid #dbdbdb;
 }
 
-.feed{
+.feed {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.dropdown{
+.dropdown {
     float: left;
     overflow: hidden;
 }
 
-@media(max-width:500px){
-    .bloco{
+.perfil{
+    width: 935px;
+    margin: 0 auto;
+    background-color: #f00;
+}
+
+.perfil {
+    margin: 0;
+}
+
+.miniaturaPerfil{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.miniaturaPost{
+    width: 300px;
+    height: 300px;
+}
+
+@media(max-width:500px) {
+    .bloco {
         width: 100%;
         height: 100%;
     }

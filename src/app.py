@@ -30,13 +30,15 @@ cur = mydb.cursor()
 cur.execute("CREATE DATABASE IF NOT EXISTS CLONE_INSTAGRAM;")
 cur.execute("USE CLONE_INSTAGRAM;")
 
-cur.execute("CREATE TABLE IF NOT EXISTS USUARIO (idusuario INT PRIMARY KEY AUTO_INCREMENT NOT NULL, email varchar(100) NOT NULL, nome varchar(100) NOT NULL, senha varchar(100) NOT NULL, foto varchar(100) NOT NULL);")
+cur.execute("CREATE TABLE IF NOT EXISTS USUARIO (idusuario INT PRIMARY KEY AUTO_INCREMENT NOT NULL, email varchar(100) NOT NULL, nome varchar(100) NOT NULL, senha varchar(100) NOT NULL, foto varchar(100) NOT NULL, bio varchar(200) NOT NULL);")
 
 cur.execute("CREATE TABLE IF NOT EXISTS POST (idpost INT PRIMARY KEY AUTO_INCREMENT NOT NULL, idusuario INT NOT NULL, foto varchar(100) NOT NULL, descricao varchar(100) NOT NULL, FOREIGN KEY (idusuario) REFERENCES USUARIO(idusuario));")
 
 cur.execute("CREATE TABLE IF NOT EXISTS COMENTARIO (idcomentario INT PRIMARY KEY AUTO_INCREMENT NOT NULL, idpost INT NOT NULL, idusuario INT NOT NULL, comentario varchar(100) NOT NULL, FOREIGN KEY (idpost) REFERENCES POST(idpost), FOREIGN KEY (idusuario) REFERENCES USUARIO(idusuario));")
 
 cur.execute("CREATE TABLE IF NOT EXISTS CURTIDA (idcurtida INT PRIMARY KEY AUTO_INCREMENT NOT NULL, idpost INT NOT NULL, idusuario INT NOT NULL, FOREIGN KEY (idpost) REFERENCES POST(idpost), FOREIGN KEY (idusuario) REFERENCES USUARIO(idusuario));")
+
+cur.execute ("CREATE TABLE IF NOT EXISTS SEGUIDOR (idseguidor INT PRIMARY KEY AUTO_INCREMENT NOT NULL, idusuario INT NOT NULL, idseguido INT NOT NULL, FOREIGN KEY (idusuario) REFERENCES USUARIO(idusuario), FOREIGN KEY (idseguido) REFERENCES USUARIO(idusuario));")
 
 mydb.commit()
 
@@ -46,11 +48,13 @@ cur.execute("SELECT * FROM USUARIO")
 
 if cur.fetchone() == None:
 
-    cur.execute("INSERT INTO USUARIO (email, nome, senha, foto) VALUES ('capirava@gmail.com ', 'Capiravildo', '123', 'perfil1.jpg');")
-    cur.execute("INSERT INTO USUARIO (email, nome, senha, foto) VALUES ('gato@gmail.com ', 'Gatodinho', '123', 'perfil2.jpg');")
+    # DUAS INSERÇÕES DE USUÁRIO E POST APENAS DE TESTE / EXEMPLO
 
-    cur.execute("INSERT INTO POST (idusuario, foto, descricao) VALUES (1, 'post1.jpg', 'OIA EU DE BATMAN');")
-    cur.execute("INSERT INTO POST (idusuario, foto, descricao) VALUES (2, 'post2.jpg', 'é o pulas');")
+    cur.execute("INSERT INTO USUARIO VALUES (0, 'capirava@gmail.com ', 'Capiravildo', '123', 'perfil1.jpg', 'moro no parque da cidade');")
+    cur.execute("INSERT INTO USUARIO VALUES (0, 'gato@gmail.com ', 'Gatodinho', '123', 'perfil2.jpg', 'sou muito maluco');")
+
+    cur.execute("INSERT INTO POST VALUES (0, 1, 'post1.jpg', 'OIA EU DE BATMAN');")
+    cur.execute("INSERT INTO POST VALUES (0, 2, 'post2.jpg', 'é o pulas');")
 
     mydb.commit()
 
@@ -126,7 +130,7 @@ def cadastro():
             if usuario:
                 msg = 'Usuário já cadastrado'
             else:
-                cur.execute(f"INSERT INTO usuario (nome, senha, email, foto) VALUES ('{nome}', '{senha}', '{email}', 'default.png')")
+                cur.execute(f"INSERT INTO usuario (nome, senha, email, foto, bio) VALUES ('{nome}', '{senha}', '{email}', 'default.png', 'Olá!')")
                 mydb.commit()
                 return redirect(url_for('login'))
         
@@ -170,6 +174,36 @@ def publicar():
                 mydb.commit()
                 return redirect(url_for('home'))
     return render_template('publicar.html', foto=session['foto'], msg=msg)
+
+@app.route("/perfil/<idusuario>")
+def perfil(idusuario):
+    if not session.get('loggedin'):
+        return redirect(url_for('login'))
+    cur.execute(f"SELECT nome, foto, bio FROM usuario WHERE idusuario = {idusuario}")
+    usuario = cur.fetchone()
+    cur.execute(f"SELECT idpost, foto FROM post WHERE idusuario = {idusuario}")
+    posts = cur.fetchall()
+    mydb.commit()
+    return render_template('perfil.html', usuario=usuario, posts=posts, foto=session['foto'])
     
+@app.route("/editarPerfil", methods=['POST', 'GET'])
+def editarPerfil():
+    if not session.get('loggedin'):
+        return redirect(url_for('login'))
+    msg = ''
+    if request.method == 'POST':
+        nome = request.form['nome']
+        senha = request.form['senha']
+        csenha = request.form['csenha']
+        if 'senha' not in request.form and 'csenha' not in request.form and 'nome' not in request.form:
+            msg = 'Preencha todos os campos'
+        elif senha != csenha:
+            msg = 'As senhas não se conferem'
+        else:
+            cur.execute(f"UPDATE usuario SET nome = '{nome}', senha = '{senha}' WHERE idusuario = {session['idusuario']}")
+            mydb.commit()
+            return redirect(url_for('home'))
+    return render_template('editarPerfil.html', foto=session['foto'], msg=msg)
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,21 @@
+{% extends "home.html" %}
+{% block titulo %}{{ usuario[0] }}{% endblock %}
+{% block conteudo %}
+
+<main>
+    <div class="perfil">
+        <div class="cima">
+            <img src="../static/uploads/{{usuario[1]}}" alt="" class="miniaturaPerfil">
+        </div>
+        <hr>
+        <div class="baixo">
+            {% for post in posts %}
+            <div class="PerfilPosts">
+                <img src="../static/uploads/{{post[1]}}" alt="" class="miniaturaPost">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</main>
+
+{% endblock %}
